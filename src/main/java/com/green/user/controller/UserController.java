@@ -1,0 +1,59 @@
+package com.green.user.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.green.user.dto.UserDto;
+import com.green.user.mapper.UserMapper;
+
+@Controller
+@RequestMapping("/Users")
+public class UserController {
+	
+	@Autowired
+	private UserMapper userMapper;
+
+	// /Users/WriteForm()
+	@RequestMapping("/WriteForm")
+	public ModelAndView writeForm() {
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("users/write");
+		mv.addObject("msg", "조민석");
+		
+		return mv;
+	}
+	
+	// http://localhost:8080/Users/Write?userid=&passwd=&username=&email=
+	@RequestMapping("/Write")
+	public ModelAndView write(UserDto userDto) {
+		System.out.println("유저 컨트롤러 속 유저DTO : " + userDto);
+		
+		// 넘어온 data 로 db 에 저장
+		userMapper.insertUser(userDto);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/Users/List");
+		
+		return mv;
+	}
+	
+	// /Users/List
+	@RequestMapping("/List")
+	public ModelAndView  list() { 
+		
+		List<UserDto> userList = userMapper.getUserList();
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("users/list");
+		mv.addObject("userList", userList);
+		
+		return mv;
+	}
+	
+	
+}

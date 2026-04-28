@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 
+Windows -> Preferences -> 검색:xml
+  -> Xml(Wild Web Developer) -> 오른쪽 탭에서
+   체크 Download ML Resource .... -> Apply 버튼 클릭
+  
+namespace="com.green.user.mapper.UserMapper" : interface 위치 
+-->
+<mapper namespace="com.green.user.mapper.UserMapper">
+	
+	<!-- 사용자 추가 -->
+	<insert id="insertUser">
+	INSERT INTO TUSER (
+    USERID,
+    PASSWD,
+    USERNAME,
+    EMAIL,
+    UPOINT,
+    REGDATE
+) VALUES ( #{ userid },
+           #{ passwd },
+           #{ username },
+           #{ email },
+           1000,
+           sysdate )
+	</insert>
+	
+	<!-- 사용자 목록 -->
+	<select id="getUserList">
+	SELECT
+	    USERID,
+	    USERNAME,
+	    EMAIL,
+	    UPOINT,
+	    TO_CHAR(REGDATE, 'YYYY-MM-DD') REGDATE
+	FROM
+	    TUSER
+	ORDER BY USERID ASC
+	
+	</select>
+  
+</mapper>
+
