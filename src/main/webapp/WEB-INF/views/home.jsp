@@ -16,7 +16,8 @@
     <div><a href="/Menus/WriteForm2">새 메뉴추가2</a></div>
     <div><a href="/Menus/List">메뉴목록</a></div><br>
     <div><a href="/Users/WriteForm">유저추가</a></div>  
-    <div><a href="/Users/List">유저목록</a></div>  
+    <div><a href="/Users/List">유저목록</a></div><br>  
+    <div><a href="/Users/IdDupCheck2?userid=aaa" target="blank">아이디 중복 테스트</a></div>
   </main>
   
 </body>

@@ -31,45 +31,48 @@
   input[type=submit], input[type=button] {
      width : 100px;
   }
-  input[name=userid] {
-  	 width : 80%;
-  }
-  
   
 </style>
 <body> 
   <main>
-    <h2>사용자 등록</h2>
-    <form  action="/Users/Write" method="post">
+    <h2>사용자 수정</h2>
+    <form  action="/Users/Update" method="post">
      <table>
       <tr>
         <td><span class="red">*</span>사용자 아이디</td>
-        <td>
-        <input type="text" name="userid" />
-        <input type="button" id="dupCheck1" value="중복확인(새창)" />
-        <input type="button" id="dupCheck2" value="중복확인(Ajax)" />
-        </td>
-        
+        <td><input type="text" name="userid" value="${user.userid}" /></td>
       </tr>
       <tr>
-        <td><span class="red">*</span>비밀번호</td>
-        <td><input type="password" name="passwd" id="passwd"  /></td>
+        <td><span class="red">*</span>이전 비밀번호</td>
+        <td><input type="password" id="passwdold" /></td>
       </tr>
       <tr>
-        <td><span class="red">*</span>비밀번호 확인</td>
+        <td><span class="red">*</span>새 비밀번호</td>
+        <td><input type="password" name="passwd" id="passwd" /></td>
+      </tr>
+      <tr>
+        <td><span class="red">*</span>새 비밀번호 확인</td>
         <td><input type="password" id="passwd2" /></td>
       </tr>
       <tr>
         <td><span class="red">*</span>이름</td>
-        <td><input type="text" name="username" /></td>        
+        <td><input type="text" name="username" value="${user.username}" /></td>        
       </tr>
       <tr>
         <td>이메일</td>
-        <td><input type="text" name="email" />
+        <td><input type="text" name="email" value="${user.email}" /></td>
+      </tr>
+      <tr>
+        <td>포인트</td>
+        <td>${user.upoint}</td>
+      </tr>
+      <tr>
+        <td>가입일</td>
+        <td>${user.regdate}</td>
       </tr>
       <tr>
         <td colspan="2">
-          <input type="submit"  value="추가" />
+          <input type="submit"  value="수정" />
           <input type="button"  value="목록" 
             onclick="location.href='/Users/List'"
           />        
@@ -80,15 +83,11 @@
   </main>
 <!-- Java Script 코딩 : client validation -->
 <script>
-	var   idDupChecked = false
-
-	const formEl     = document.querySelector('form');
-	const useridEl   = document.querySelector('[name="userid"]');
-	const passwdEl   = document.querySelector('#passwd');
-	const passwd2El  = document.querySelector('#passwd2');
-	const usernameEl = document.querySelector('[name="username"]');
-	
-	// 입력항목 체크
+	const formEl      = document.querySelector('form');
+	const useridEl    = document.querySelector('[name="userid"]');
+	const passwdoldEl = document.querySelector('#passwdold');
+	const passwd2El   = document.querySelector('#passwd2');
+	const usernameEl  = document.querySelector('[name="username"]');
 	formEl.addEventListener('submit', function(e) {
 		
 	// 아이디 값 체크
@@ -100,16 +99,24 @@
 		return;
 	}
 	
-	// 아이디 중복확인 체크
-	if( !idDupChecked ) {
-		alert('아이디 중복 확인을 하세요')
+	// 옛날비밀번호 입력체크
+	if(passwdoldEl.value.trim() == '') {
+		alert('예전 비밀번호를 입력하세요')
+		passwdoldEl.focus();
 		e.preventDefault()  // 이벤트 취소
 		e.stopPropagation() // 이벤트 버블링 방지
 		return;
 	}
-		
-		
-		
+	
+	// 옛날비밀번호 == 조회된 비밀번호 user.passwd 체크
+	if(passwdoldEl.value.trim() != '${user.passwd}') {
+		alert('이전 비밀번호가 틀립니다')
+		passwdoldEl.focus();
+		e.preventDefault()  // 이벤트 취소
+		e.stopPropagation() // 이벤트 버블링 방지
+		return;
+	}
+	
 	// 비밀번호 값 체크
 	if(passwdEl.value.trim() == '') {
 		alert('암호를 입력하세요')
@@ -149,53 +156,8 @@
 });
 	
 </script>
-<script>
-	// 아이디 중복 확인 (새창 열기)
-	const btnDup1El = document.querySelector('#dupCheck1')
-	btnDup1El.addEventListener('click', function() {
-		//alert('ok1')
-		// 새 창(새 브라우저)을 띄운다
-		let url      = '/Users/DupCheckWindow';
-		let target   = 'dupcheck';  // 새 창 이름 잇으면 한 개만 열린다
-		let feauture = 'left=800, top=200, width=400, height=300';
-		window.open(url, target, feauture)
-	})	
-</script>
-
-<script>
-	// 아이디 중복 확인 (Ajax)
-	const btnDup2El = document.querySelector('#dupCheck2')
-	btnDup2El.addEventListener('click', function() {
-		if(useridEl.value.trim() == '') {
-			alert('아이디를 입력하세요')
-			useridEl.focus()
-			return ;
-		}
-		let url = '/Users/IdDupCheck2?userid=' + useridEl.value
-		fetch(url)
-		  .then((response) => response.json())
-		  .then(data => {
-			  console.log(data)
-			  if(data.userid != null) {
-				  alert('사용불가능')
-				  idDupChecked = false;
-			  } else {
-				  alert('사용가능')
-				  idDupChecked = true;
-			  }
-	     });
-	})
-	
-	// userid 의 value 가 바뀌면 idDupChecked = false;
-	useridEl.addEventListener('change', function() {
-		idDupChecked = false;
-	})
-	
-	
-</script>
-
 </body>
-</html>
+</html>    
 
 
 
