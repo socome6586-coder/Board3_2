@@ -55,7 +55,8 @@ CREATE TABLE   TUSER (
     , REGDATE    DATE           DEFAULT   SYSDATE
 );
 
-
+------------------------------------------------------
+-- 멀티 게시판 정보
 
 
 
